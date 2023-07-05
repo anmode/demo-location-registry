@@ -1,13 +1,13 @@
 {
 	"scopes": [
 		{
-			"name": "school",
-			"description": "Access the entity's school name",
+			"name": "location",
+			"description": "Starter pack location master",
 			"protocol": "openid-connect",
 			"mapper": {
 				"type": "oidc-usermodel-property-mapper",
 				"attribute": {
-					"path": "school",
+					"path": "location",
 					"type": "String"
 				}
 			}
