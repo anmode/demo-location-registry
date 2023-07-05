@@ -1,18 +1,18 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
     "type": "object",
-    "properties": { "District": { "$ref": "#/definitions/District" } },
+    "properties": { "district": { "$ref": "#/definitions/District" } },
     "required": ["District"],
     "title": "District",
     "definitions": {
-      "District": {
-        "$id": "#/properties/District",
+      "district": {
+        "$id": "#/properties/district",
         "type": "object",
         "title": "DistrictSchema",
         "required": ["name", "state"],
         "properties": {
           "name": { "type": "string" },
-          "state": { "$ref": "#/definitions/State" }
+          "state": { "$ref": "#/definitions/state" }
         }
       }
     }

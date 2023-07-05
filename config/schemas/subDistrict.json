@@ -2,23 +2,23 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "type": "object",
     "properties": {
-      "Subdistrict": {
-        "$ref": "#/definitions/Subdistrict"
+      "subDistrict": {
+        "$ref": "#/definitions/subDistrict"
       }
     },
-    "required": ["districtSub"],
+    "required": ["subdistrict"],
     "title": "Subdistrict",
     "definitions": {
-      "Subdistrict": {
-        "$id": "#/properties/Subdistrict",
+      "subDistrict": {
+        "$id": "#/properties/subDistrict",
         "type": "object",
-        "title": "SubdistrictSchema",
+        "title": "subDistrictSchema",
         "required": ["name", "district"],
         "properties": {
           "name": {
             "type": "string"
           },
-          "district": { "$ref": "#/definitions/District" }
+          "district": { "$ref": "#/definitions/district" }
         }
       }
     }

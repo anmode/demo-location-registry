@@ -1,12 +1,12 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
     "type": "object",
-    "properties": { "State": { "$ref": "#/definitions/State" } },
-    "required": ["State"],
-    "title": "State",
+    "properties": { "state": { "$ref": "#/definitions/state" } },
+    "required": ["state"],
+    "title": "state",
     "definitions": {
-      "State": {
-        "$id": "#/properties/State",
+      "state": {
+        "$id": "#/properties/state",
         "type": "object",
         "title": "StateSchema",
         "required": ["name", "isoCode", "stateCode"],
