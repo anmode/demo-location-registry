@@ -7,7 +7,7 @@
       }
     },
     "required": ["subdistrict"],
-    "title": "Subdistrict",
+    "title": "subdistrict",
     "definitions": {
       "subDistrict": {
         "$id": "#/properties/subDistrict",
