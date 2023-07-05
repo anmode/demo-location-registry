@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "properties": {
+      "Subdistrict": {
+        "$ref": "#/definitions/Subdistrict"
+      }
+    },
+    "required": ["districtSub"],
+    "title": "Subdistrict",
+    "definitions": {
+      "Subdistrict": {
+        "$id": "#/properties/Subdistrict",
+        "type": "object",
+        "title": "SubdistrictSchema",
+        "required": ["name", "district"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "district": { "$ref": "#/definitions/District" }
+        }
+      }
+    }
+  }
+  
