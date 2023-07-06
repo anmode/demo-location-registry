@@ -8,10 +8,8 @@ import (
 )
 
 func main() {
-	// Replace 'path/to/spreadsheet.xlsx' with the actual path to your spreadsheet file
 	excelFilePath := "./spreadsheet/state.xlsx"
 
-	// Open the spreadsheet file
 	xlFile, err := xlsx.OpenFile(excelFilePath)
 	if err != nil {
 		fmt.Println("Error opening file:", err)
