@@ -1,22 +1,24 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "type": "object",
-    "properties": { "state": { "$ref": "#/definitions/state" } },
-    "required": ["state"],
-    "title": "state",
-    "definitions": {
-      "state": {
-        "$id": "#/properties/state",
-        "type": "object",
-        "title": "StateSchema",
-        "required": ["name", "isoCode", "stateCode"],
-        "uniqueIndexFields": ["isoCode", "stateCode"],
-        "properties": {
-          "name": { "type": "string" },
-          "isoCode": { "type": "string" },
-          "stateCode": { "type": "string" }
-        }
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "State": {
+      "$ref": "#/definitions/State"
+    }
+  },
+  "required": ["State"],
+  "title": "State",
+  "definitions": {
+    "State": {
+      "$id": "#/properties/State",
+      "type": "object",
+      "title": "The State Schema",
+      "uniqueIndexFields": "stateCode",
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string"},
+        "stateCode": { "type": "string" }
       }
     }
   }
-  
+}

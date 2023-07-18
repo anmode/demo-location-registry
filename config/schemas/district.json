@@ -1,20 +1,27 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "type": "object",
-    "properties": { "district": { "$ref": "#/definitions/district" } },
-    "required": ["district"],
-    "title": "district",
-    "definitions": {
-      "district": {
-        "$id": "#/properties/district",
-        "type": "object",
-        "title": "districtSchema",
-        "required": ["name", "state"],
-        "properties": {
-          "name": { "type": "string" },
-          "state": { "$ref": "#/definitions/state" }
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "District": {
+      "$ref": "#/definitions/District"
+    }
+  },
+  "required": ["District"],
+  "title": "District",
+  "definitions": {
+    "District": {
+      "$id": "#/properties/District",
+      "type": "object",
+      "title": "The District Schema",
+      "required": ["name", "state"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
         }
       }
     }
   }
-  
+}

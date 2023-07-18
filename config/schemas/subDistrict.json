@@ -1,26 +1,30 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "type": "object",
-    "properties": {
-      "subDistrict": {
-        "$ref": "#/definitions/subDistrict"
-      }
-    },
-    "required": ["subdistrict"],
-    "title": "subdistrict",
-    "definitions": {
-      "subDistrict": {
-        "$id": "#/properties/subDistrict",
-        "type": "object",
-        "title": "subDistrictSchema",
-        "required": ["name", "district"],
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "district": { "$ref": "#/definitions/district" }
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "Subdistrict": {
+      "$ref": "#/definitions/Subdistrict"
+    }
+  },
+  "required": ["Subdistrict"],
+  "title": "Subdistrict",
+  "definitions": {
+    "Subdistrict": {
+      "$id": "#/properties/Subdistrict",
+      "type": "object",
+      "title": "The Subdistrict Schema",
+      "required": ["name", "district", "state"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "district": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
         }
       }
     }
   }
-  
+}
