@@ -16,7 +16,7 @@
       "required": ["name", "state"],
       "properties": {
         "districtCode": { 
-          "type": "string" 
+          "type": "integer" 
         },
         "name": {
           "type": "string"

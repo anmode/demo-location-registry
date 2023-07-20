@@ -13,8 +13,11 @@
         "$id": "#/properties/Village",
         "type": "object",
         "title": "The Village Schema",
-        "required": ["name", "city", "district", "state"],
+        "required": ["name", "state","district","Subdistrict"],
         "properties": {
+          "villageCode":{
+            "type": "integer"
+          },
           "name": {
             "type": "string"
           },

@@ -15,14 +15,14 @@
       "title": "The Subdistrict Schema",
       "required": ["name", "district", "state"],
       "properties": {
+        "subDistrictCode": { 
+          "type": "integer" 
+        },
         "name": {
           "type": "string"
         },
         "district": {
           "type": "string"
-        },
-        "subDistrictCode": { 
-          "type": "string" 
         }
       }
     }

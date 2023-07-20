@@ -16,10 +16,12 @@
       "uniqueIndexFields": "stateCode",
       "required": ["name"],
       "properties": {
-        "name": {"type": "string"},
         "stateCode": {
-           "type": "string"
-         },
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
         "isState": {
           "type": "boolean",
           "const": true
