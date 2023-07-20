@@ -21,8 +21,8 @@
         "district": {
           "type": "string"
         },
-        "state": {
-          "type": "string"
+        "subDistrictCode": { 
+          "type": "string" 
         }
       }
     }

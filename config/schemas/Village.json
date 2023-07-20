@@ -18,13 +18,13 @@
           "name": {
             "type": "string"
           },
-          "city": {
+          "state": {
             "type": "string"
           },
           "district": {
             "type": "string"
           },
-          "state": {
+          "Subdistrict": {
             "type": "string"
           }
         }

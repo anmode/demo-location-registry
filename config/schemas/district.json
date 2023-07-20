@@ -15,6 +15,9 @@
       "title": "The District Schema",
       "required": ["name", "state"],
       "properties": {
+        "districtCode": { 
+          "type": "string" 
+        },
         "name": {
           "type": "string"
         },

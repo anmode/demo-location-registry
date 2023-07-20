@@ -17,7 +17,13 @@
       "required": ["name"],
       "properties": {
         "name": {"type": "string"},
-        "stateCode": { "type": "string" }
+        "stateCode": {
+           "type": "string"
+         },
+        "isState": {
+          "type": "boolean",
+          "const": true
+        }
       }
     }
   }
