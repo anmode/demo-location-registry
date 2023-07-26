@@ -21,8 +21,11 @@
         "name": {
           "type": "string"
         },
-        "state": {
-          "type": "string"
+        "hierarchy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     }
