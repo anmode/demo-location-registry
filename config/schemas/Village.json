@@ -24,11 +24,11 @@
           "state": {
             "type": "string"
           },
-          "district": {
-            "type": "string"
-          },
-          "Subdistrict": {
-            "type": "string"
+          "hierarchy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
