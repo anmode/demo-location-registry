@@ -1,0 +1,63 @@
+/* footer.component.css */
+/* Add your previously provided styles here */
+
+/* Additional Styles */
+.footer {
+    background-color: #007bff;
+    color: #fff;
+    padding: 30px 0;
+  }
+  
+  .container {
+    max-width: 1200px;
+    width: 90%;
+    margin: auto;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .footer-logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #fff;
+  }
+  
+  .footer-nav {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .footer-nav li {
+    margin-right: 20px;
+  }
+  
+  .footer-nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-nav a:hover {
+    color: #f8f9fa;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 500px) {
+    .navbar-container input[type="checkbox"]:checked ~ .logo {
+      display: none;
+    }
+  }
+  
