@@ -13,7 +13,7 @@
         "$id": "#/properties/Village",
         "type": "object",
         "title": "The Village Schema",
-        "required": ["name", "state","district","Subdistrict"],
+        "required": ["name"],
         "properties": {
           "villageCode":{
             "type": "integer"
@@ -25,10 +25,7 @@
             "type": "string"
           },
           "hierarchy": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string"
           }
         }
       }

@@ -22,10 +22,7 @@
           "type": "string"
         },
         "hierarchy": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+          "type": "string"
         }
       }
     }

@@ -13,7 +13,7 @@
       "$id": "#/properties/Subdistrict",
       "type": "object",
       "title": "The Subdistrict Schema",
-      "required": ["name", "district", "state"],
+      "required": ["name"],
       "properties": {
         "subDistrictCode": { 
           "type": "integer" 
@@ -25,10 +25,8 @@
           "type": "string"
         },
         "hierarchy": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+          "type": "string"
+        }
       }
     }
   }

@@ -1,5 +1,5 @@
 const express = require('express');
-const fileParser = require('../parser');
+const fileParser = require('../utility/parser');
 
 const router = express.Router();
 
