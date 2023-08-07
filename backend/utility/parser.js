@@ -5,30 +5,28 @@ const { parseString } = require('xml2js');
 const yaml = require('js-yaml');
 const xlsx = require('xlsx');
 
-async function parseFileToJSON(filePath) {
+async function parseFileToJSON(fileInfo) {
   try {
-    // const fileExt = path.extname(filePath).toLowerCase();
+    const fileExt = path.extname(fileInfo.originalname).toLowerCase();
+    const filePath = fileInfo.path;
+    // console.log('File extension:', fileExt, filePath);
 
-    // console.log('File extension:', fileExt);
 
-
-    // switch (fileExt) {
-    //   case '.json':
-    //     return parseJSON(filePath);
-    //   case '.csv':
-    //     return parseCSV(filePath);
-    //   case '.xml':
-    //     return parseXML(filePath);
-    //   case '.yaml':
-    //   case '.yml':
-    //     return parseYAML(filePath);
-    //     case '.xlsx':
-    //       return parseXLSX(filePath);
-    //   default:
-    //     throw new Error('Unsupported file format.');
-    // }
-     const parsedData =  parseXLSX(filePath);
-     return parsedData;
+    switch (fileExt) {
+      case '.json':
+        return parseJSON(filePath);
+      case '.csv':
+        return parseCSV(filePath);
+      case '.xml':
+        return parseXML(filePath);
+      case '.yaml':
+      case '.yml':
+        return parseYAML(filePath);
+        case '.xlsx':
+          return parseXLSX(filePath);
+      default:
+        throw new Error('Unsupported file format.');
+    }
   } catch (err) {
     throw new Error('Error parsing the file: ' + err.message);
   }
