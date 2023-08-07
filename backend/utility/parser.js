@@ -6,7 +6,6 @@ const yaml = require('js-yaml');
 const xlsx = require('xlsx');
 
 async function parseFileToJSON(filePath) {
-    console.log(filePath);
   try {
     // const fileExt = path.extname(filePath).toLowerCase();
 
@@ -28,7 +27,8 @@ async function parseFileToJSON(filePath) {
     //   default:
     //     throw new Error('Unsupported file format.');
     // }
-    parseXLSX(filePath);
+     const parsedData =  parseXLSX(filePath);
+     return parsedData;
   } catch (err) {
     throw new Error('Error parsing the file: ' + err.message);
   }
@@ -105,9 +105,24 @@ function parseYAML(filePath) {
 function parseXLSX(filePath) {
   const workbook = xlsx.readFile(filePath);
   const sheetNameList = workbook.SheetNames;
-  const data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]], { header: 'A' });
-  console.log(data);
-  return data;
+  const data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]], {
+    header: 1
+  });
+
+  //  console.log(data);
+
+  // Convert array of arrays to array of objects
+  const headerRow = data[0];
+  // console.log(headerRow);
+  const result = data.slice(1).map((row) => {
+    const obj = {};
+    headerRow.forEach((header, index) => {
+      obj[header] = row[index];
+    });
+    return obj;
+  });
+
+  return result;
 }
 
 module.exports = {
