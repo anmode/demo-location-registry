@@ -21,9 +21,6 @@
           "name": {
             "type": "string"
           },
-          "state": {
-            "type": "string"
-          },
           "hierarchy": {
             "type": "string"
           }
