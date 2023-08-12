@@ -13,7 +13,7 @@
       "$id": "#/properties/District",
       "type": "object",
       "title": "The District Schema",
-      "required": ["name", "state"],
+      "required": ["name", "districtCode", "higherHierarchy"],
       "properties": {
         "districtCode": { 
           "type": "integer" 
@@ -21,7 +21,7 @@
         "name": {
           "type": "string"
         },
-        "hierarchy": {
+        "higherHierarchy": {
           "type": "string"
         }
       }

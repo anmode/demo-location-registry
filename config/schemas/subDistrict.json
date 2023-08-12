@@ -13,7 +13,7 @@
       "$id": "#/properties/Subdistrict",
       "type": "object",
       "title": "The Subdistrict Schema",
-      "required": ["name"],
+      "required": ["name", "subDistrictCode", "higherHierarchy"],
       "properties": {
         "subDistrictCode": { 
           "type": "integer" 
@@ -21,7 +21,7 @@
         "name": {
           "type": "string"
         },
-        "hierarchy": {
+        "higherHierarchy": {
           "type": "string"
         }
       }

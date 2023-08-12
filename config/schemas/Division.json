@@ -2,20 +2,21 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "type": "object",
     "properties": {
-      "Village": {
-        "$ref": "#/definitions/Village"
+      "Division": {
+        "$ref": "#/definitions/Division"
       }
     },
-    "required": ["Village"],
-    "title": "Village",
+    "required": ["Division"],
+    "title": "Division",
     "definitions": {
-      "Village": {
-        "$id": "#/properties/Village",
+      "Division": {
+        "$id": "#/properties/Division",
         "type": "object",
-        "title": "The Village Schema",
-        "required": ["name","villageCode", "higherHierarchy"],
+        "title": "The Division Schema",
+        "uniqueIndexFields": "DivisionCode",
+        "required": ["name", "DivisionCode", "higherHierarchy"],
         "properties": {
-          "villageCode":{
+          "divisionCode": {
             "type": "integer"
           },
           "name": {
@@ -28,4 +29,5 @@
       }
     }
   }
+  
   

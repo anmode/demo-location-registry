@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "properties": {
+      "Union": {
+        "$ref": "#/definitions/Union"
+      }
+    },
+    "required": ["Union"],
+    "title": "Union",
+    "definitions": {
+      "Union": {
+        "$id": "#/properties/Union",
+        "type": "object",
+        "title": "The Union Schema",
+        "uniqueIndexFields": "UnionCode",
+        "required": ["name", "unionCode"],
+        "properties": {
+          "unionCode": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+  
+  

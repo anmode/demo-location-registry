@@ -41,7 +41,7 @@ router.post('/', upload.single('file'), async (req, res) => {
       for (const [key, value] of Object.entries(entityConfigForType.keyMap)) {
         data[key] = item[value];
       }
-      data.hierarchy = hierarchy; // Add hierarchy to data
+      data.higherHierarchy = hierarchy; // Add hierarchy to data
       return data;
     });
 

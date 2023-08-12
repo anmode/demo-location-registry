@@ -14,7 +14,7 @@
       "type": "object",
       "title": "The State Schema",
       "uniqueIndexFields": "stateCode",
-      "required": ["name"],
+      "required": ["name", "stateCode","isState","higherHierarchy"],
       "properties": {
         "stateCode": {
           "type": "integer"
@@ -25,6 +25,9 @@
         "isState": {
           "type": "boolean",
           "const": true
+        },
+        "higherHierarchy": {
+          "type": "string"
         }
       }
     }
