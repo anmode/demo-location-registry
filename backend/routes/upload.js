@@ -3,9 +3,48 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const axios = require('axios');
 const entityConfig = require('../config/entityConfig'); // Import the configuration file
-
 const router = express.Router();
 
+
+
+
+/**
+ * @swagger
+ * /api/upload:
+ *   post:
+ *     summary: Upload and process a file
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: formData
+ *         name: file
+ *         type: file
+ *         description: The file to upload
+ *       - in: query
+ *         name: entityType
+ *         type: string
+ *         required: true
+ *         description: The type of entity
+ *       - in: query
+ *         name: source
+ *         type: string
+ *         required: true
+ *         description: The source of the data
+ *       - in: query
+ *         name: hierarchy
+ *         type: string
+ *         required: true
+ *         description: The hierarchy information
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: File uploaded, parsed, and data processed successfully
+ *               success: true
+ *               results: []
+ */
 router.post('/', upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
