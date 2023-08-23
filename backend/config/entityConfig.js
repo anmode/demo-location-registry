@@ -36,7 +36,7 @@ module.exports = {
                 "name": "Rajya ka naam",
                 "higherHierarchy": "Heirarchy"
             }
-        }
+        },
     },
     "Block": {
         "lgd": {

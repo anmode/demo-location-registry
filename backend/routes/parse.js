@@ -1,24 +1,24 @@
 const express = require('express');
 const fileParser = require('../utility/parser');
 const path = require('path');
+const multer = require('multer');
 
 const router = express.Router();
+const upload = multer({ dest: 'uploads/' }); // Define the upload directory
 
 /**
  * @swagger
  * /api/parse:
  *   post:
  *     summary: Parse a file to JSON
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               file:
- *                 type: string
- *                 description: The file information
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: formData
+ *         name: file
+ *         description: The file to be parsed.
+ *         required: true
+ *         type: file
  *     responses:
  *       200:
  *         description: Successful response
@@ -27,8 +27,8 @@ const router = express.Router();
  *             example:
  *               data: []
  */
-router.post('/', async (req, res) => {
-  const fileInfo = req.body.file;
+router.post('/', upload.single('file'), async (req, res) => {
+  const fileInfo = req.body.file || req.file ;
 
   if (!fileInfo) {
     return res.status(400).json({ error: 'File Information not provided' });

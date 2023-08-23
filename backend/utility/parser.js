@@ -9,7 +9,6 @@ async function parseFileToJSON(fileInfo) {
   try {
     const fileExt = path.extname(fileInfo.originalname).toLowerCase();
     const filePath = fileInfo.path;
-    // console.log('File extension:', fileExt, filePath);
 
 
     switch (fileExt) {
@@ -107,7 +106,6 @@ function parseXLSX(filePath) {
     header: 1
   });
 
-  //  console.log(data);
 
   // Convert array of arrays to array of objects
   const headerRow = data[0];

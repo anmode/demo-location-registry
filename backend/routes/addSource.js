@@ -8,7 +8,7 @@ const path = require('path');
 
 /**
  * @swagger
- * /api/updateSource:
+ * /api/addSource:
  *   put:
  *     summary: Update source configuration
  *     description: Update the source configuration for a specific entity type and source
@@ -25,17 +25,19 @@ const path = require('path');
  *         description: The source of the data (e.g., lgd, otherSource)
  *         schema:
  *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         description: Add your source config to our database
+ *         content:
+ *           application/json:
+ *         schema:
+ *           type: object
+ *           properties:
  *               keyMap:
  *                 type: object
  *                 properties:
- *                   code:
+ *                   enitityCode:
  *                     type: string
  *                   name:
  *                     type: string
@@ -43,7 +45,7 @@ const path = require('path');
  *                     type: string
  *           example:
  *             keyMap:
- *               code: Updated Code (Replace with actual code)
+ *               entityCode: Updated Code (Replace with actual code)
  *               name: Updated Name (In English)
  *               higherHierarchy: Updated Hierarchy
  *     responses:
@@ -67,36 +69,31 @@ const path = require('path');
 router.put('/', (req, res) => {
     const entityType = req.query.entityType;
     const source = req.query.source;
+    const entityTypeTitleCase = entityType.charAt(0).toUpperCase() + entityType.slice(1);
 
     // Check if entityType and source are provided
-    if (!entityType || !source) {
+    if (!entityTypeTitleCase || !source) {
         return res.status(400).json({ error: 'Invalid entityType or source' });
     }
 
     const newSourceConfig = req.body;
 
     try {
-        if (!entityConfig[entityType]) {
+        if (!entityConfig[entityTypeTitleCase]) {
             return res.status(400).json({ error: 'Invalid entityType' });
         }
 
         // Validate keyMap properties based on the entityType
-        const expectedKey = `${entityType.toLowerCase()}Code`;
-        if (!newSourceConfig.keyMap || !newSourceConfig.keyMap[expectedKey]) {
-            return res.status(400).json({
-                error: 'Invalid keyMap properties',
-                suggestion: `Make sure to include the ${expectedKey} property in the keyMap for ${entityType}.`
-            });
-        }
+        const expectedKey = `${entityTypeTitleCase.toLowerCase()}Code`;
 
         // Continue with the update
         const keyMap = {
-            [expectedKey]: newSourceConfig.keyMap[expectedKey] || '',
+            [expectedKey]: newSourceConfig.keyMap.entityCode || '',
             name: newSourceConfig.keyMap.name || '',
             higherHierarchy: newSourceConfig.keyMap.higherHierarchy || ''
         };
 
-        entityConfig[entityType][source] = { keyMap };
+        entityConfig[entityTypeTitleCase][source] = { keyMap };
 
         // Convert entityConfig back to a string and write it to the configuration file
         const updatedConfig = `module.exports = ${JSON.stringify(entityConfig, null, 4)};\n\n`;

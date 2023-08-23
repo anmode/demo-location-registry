@@ -35,7 +35,7 @@ router.get('/:entityType', async (req, res) => {
     
     const getUrl = `http://localhost:8081/api/v1/${entityType}/search`;
     const entityCodeField = `${entityType.toLowerCase()}Code`;
-    console.log(entityCodeField);
+    // console.log(entityCodeField);
 
     const requestBody = {
       offset: 0,
