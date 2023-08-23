@@ -2,15 +2,15 @@
   "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
   "properties": {
-    "Subdistrict": {
-      "$ref": "#/definitions/Subdistrict"
+    "SubDistrict": {
+      "$ref": "#/definitions/SubDistrict"
     }
   },
-  "required": ["Subdistrict"],
-  "title": "Subdistrict",
+  "required": ["SubDistrict"],
+  "title": "SubDistrict",
   "definitions": {
-    "Subdistrict": {
-      "$id": "#/properties/Subdistrict",
+    "SubDistrict": {
+      "$id": "#/properties/SubDistrict",
       "type": "object",
       "title": "The Subdistrict Schema",
       "required": ["name", "subDistrictCode", "higherHierarchy"],
