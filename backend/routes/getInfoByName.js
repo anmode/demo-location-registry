@@ -4,20 +4,20 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/getList/{entityType}:
+ * /api/getInfoByName/{entityType}:
  *   get:
- *     summary: Get a list of entities ( state, District , SubDistricts)
+ *     summary: Get Info about entity ( State , District , SubDistrict etc) by name
  *     parameters:
  *       - in: path
  *         name: entityType
  *         required: true
- *         description: The type of entity may be District , State etc.
+ *         description: The type of entity (e.g., State, District, City)
  *         schema:
  *           type: string
  *       - in: query
- *         name: higherHierarchy
+ *         name: entityTypeVal
  *         required: true
- *         description: The higher hierarchy value of Entity (e.g., Higher Hierarchy of District may be State)
+ *         description: The value of the entity type (e.g., Maharashtra, Mumbai)
  *         schema:
  *           type: string
  *     responses:
@@ -26,28 +26,29 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             example:
- *               entities: []
+ *               entity: {}
  */
 router.get('/:entityType', async (req, res) => {
   try {
     const entityType = req.params.entityType;
-    const higherHierarchy = req.query.higherHierarchy;
-    const listUrl = `http://localhost:8081/api/v1/${entityType}/search`;
+    const entityTypeVal = req.query.entityTypeVal;
+    
+    const getUrl = `http://localhost:8081/api/v1/${entityType}/search`;
 
     const requestBody = {
       offset: 0,
       filters: {
-        higherHierarchy: {
-          eq: higherHierarchy
+        name: {
+          eq: entityTypeVal
         }
       }
     };
     
-    const listResponse = await axios.post(listUrl, requestBody);
+    const getResponse = await axios.post(getUrl, requestBody);
     
-    res.json(listResponse.data);
+    res.json(getResponse.data);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch list of entities' });
+    res.status(500).json({ error: 'Failed to fetch entity by name' });
   }
 });
 

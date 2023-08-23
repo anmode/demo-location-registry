@@ -2,11 +2,8 @@ const express = require('express');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const axios = require('axios');
-const entityConfig = require('../config/entityConfig'); // Import the configuration file
+const entityConfig = require('../config/entityConfig');
 const router = express.Router();
-
-
-
 
 /**
  * @swagger
@@ -33,8 +30,7 @@ const router = express.Router();
  *       - in: query
  *         name: hierarchy
  *         type: string
- *         required: true
- *         description: The hierarchy information
+ *         description: Provide the Higher Entity
  *     responses:
  *       200:
  *         description: Successful response
@@ -54,13 +50,13 @@ router.post('/', upload.single('file'), async (req, res) => {
     // Extract query parameters
     const entityType = req.query.entityType;
     const source = req.query.source;
-    const hierarchy = req.query.hierarchy;
 
-    // Validate the entityType, source, and hierarchy
-    if (!entityType || !source || !hierarchy) {
-      return res.status(400).json({ error: 'Invalid entityType, source, or hierarchy' });
+    // Validate the entityType and source
+    if (!entityType || !source) {
+      return res.status(400).json({ error: 'Invalid entityType or source' });
     }
 
+    const hierarchy = req.query.hierarchy; // Hierarchy from query parameter
     const file = req.file;
 
     // Forward the entire file object to the /parse route for parsing
@@ -74,15 +70,33 @@ router.post('/', upload.single('file'), async (req, res) => {
     // Get the configuration based on entity type and source
     const entityConfigForType = entityConfig[entityTypeTitleCase][source];
 
-    // Prepare data based on entity configuration
+    // Inside the processing loop where you prepare data
     const processedData = parseResponse.data.map((item) => {
       const data = {};
       for (const [key, value] of Object.entries(entityConfigForType.keyMap)) {
         data[key] = item[value];
       }
-      data.higherHierarchy = hierarchy; // Add hierarchy to data
+
+      if (item.Hierarchy || item.heirarchy) { // Convert both to lowercase
+        const hierarchyHeader = item.Hierarchy || item.heirarchy;
+        const hierarchyRegex = /([^/]+)/;
+        const match = hierarchyHeader.match(hierarchyRegex);
+        if (match) {
+          const extractedHierarchy = match[1].trim();
+          data.higherHierarchy = extractedHierarchy;
+        }
+      } else if (hierarchy) {
+        data.higherHierarchy = hierarchy;
+      }
+
+      console.log(data);
       return data;
     });
+
+
+
+
+
 
     // Call the API for each processed data
     const apiUrl = `http://localhost:8081/api/v1/${entityTypeTitleCase}/invite`;
@@ -95,13 +109,13 @@ router.post('/', upload.single('file'), async (req, res) => {
         return { success: false, error: error.message };
       }
     });
-    
+
     // Wait for all the API calls to finish
     const results = await Promise.all(promises);
-    
+
     // Check if any of the results contain an error
     const hasErrors = results.some((result) => result.success === false);
-    
+
     if (hasErrors) {
       return res.status(500).json({
         message: 'File uploaded and parsed, but there were errors during data processing',
