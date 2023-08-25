@@ -4,8 +4,6 @@ const entityConfig = require('../config/entityConfig');
 const fs = require('fs');
 const path = require('path'); 
 
-
-
 /**
  * @swagger
  * /api/addSource:

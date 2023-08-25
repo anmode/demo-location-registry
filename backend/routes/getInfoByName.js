@@ -32,8 +32,10 @@ router.get('/:entityType', async (req, res) => {
   try {
     const entityType = req.params.entityType;
     const entityTypeVal = req.query.entityTypeVal;
+
+    const entityTypeTitleCase = entityType.charAt(0).toUpperCase() + entityType.slice(1);
     
-    const getUrl = `http://localhost:8081/api/v1/${entityType}/search`;
+    const getUrl = `http://localhost:8081/api/v1/${entityTypeTitleCase}/search`;
 
     const requestBody = {
       offset: 0,

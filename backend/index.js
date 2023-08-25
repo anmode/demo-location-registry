@@ -8,6 +8,9 @@ const getListRoute = require('./routes/getList');
 const getInfoByName = require('./routes/getInfoByName');
 const getInfoByID = require('./routes/getInfoByLgdId');
 const addSource = require('./routes/addSource');
+const addHierarchy = require('./routes/hierarchy/add');
+const getAllHierarchies = require('./routes/hierarchy/fetch')
+const { add } = require('winston');
 
 const app = express();
 const PORT = 3000;
@@ -22,7 +25,7 @@ const swaggerOptions = {
       description: 'This is the documentation for APIs related to Location Master Pack',
     },
   },
-  apis: ['./routes/*.js'], // Path to your route handlers
+  apis: ['./routes/**/*.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
@@ -35,5 +38,7 @@ app.use('/api/getList', getListRoute);
 app.use('/api/getInfoByName', getInfoByName);
 app.use('/api/getInfoByLgdId', getInfoByID);
 app.use('/api/addSource', addSource);
+app.use('/api/addHirarchy', addHierarchy);
+app.use('/api/getAllHierarchies', getAllHierarchies);
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

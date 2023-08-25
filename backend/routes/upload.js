@@ -49,8 +49,8 @@ router.post('/', upload.single('file'), async (req, res) => {
 
     // Extract query parameters
     const entityType = req.query.entityType;
-    const source = req.query.source;
-    source = source.toLowerCase();
+    const source = req.query.source.toLowerCase();
+
 
     // Validate the entityType and source
     if (!entityType || !source) {
@@ -87,11 +87,12 @@ router.post('/', upload.single('file'), async (req, res) => {
           continue; // Skip this key-value pair and move to the next iteration
         }
         data[key] = item[value];
+        data.source = source;
       }
 
       if (item.Hierarchy || item.heirarchy) {
         const hierarchyHeader = item.Hierarchy || item.heirarchy;
-        const hierarchyRegex = /([^/]+)/;
+        const hierarchyRegex = /([^(/]+)/;
         const match = hierarchyHeader.match(hierarchyRegex);
         if (match) {
           const extractedHierarchy = match[1].trim();
@@ -102,6 +103,7 @@ router.post('/', upload.single('file'), async (req, res) => {
       } else if (hierarchy) {
         data.higherHierarchy = hierarchy;
       }
+      
 
       console.log(data);
       return data;

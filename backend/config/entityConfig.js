@@ -1,4 +1,4 @@
-module.exports = {
+const entityConfig = {
     "District": {
         "lgd": {
             "keyMap": {
@@ -54,7 +54,7 @@ module.exports = {
             }
         }
     },
-    "Subdistrict": {
+    "SubDistrict": {
         "lgd": {
             "keyMap": {
                 "subdistrictCode": "Subdistrict LGD Code",
@@ -104,3 +104,5 @@ module.exports = {
     }
 };
 
+
+module.exports = entityConfig;
