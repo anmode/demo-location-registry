@@ -10,11 +10,9 @@
   "title": "State",
   "definitions": {
     "State": {
-      "$id": "#/properties/State",
       "type": "object",
       "title": "The State Schema",
-      "uniqueIndexFields": "stateCode",
-      "required": ["name", "stateCode","isState","higherHierarchy"],
+      "required": ["name", "stateCode", "isState", "higherHierarchy", "source"],
       "properties": {
         "stateCode": {
           "type": "integer"
@@ -28,9 +26,13 @@
         },
         "higherHierarchy": {
           "type": "string"
+        },
+        "source": {
+          "type": "string"
         }
-      }
+      },
+      "additionalProperties": false,
+      "unique": ["stateCode", "source"]
     }
   }
 }
-

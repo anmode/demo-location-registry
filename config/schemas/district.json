@@ -10,21 +10,25 @@
   "title": "District",
   "definitions": {
     "District": {
-      "$id": "#/properties/District",
       "type": "object",
       "title": "The District Schema",
-      "required": ["name", "districtCode", "higherHierarchy"],
+      "required": ["name", "districtCode", "higherHierarchy", "source"],
       "properties": {
-        "districtCode": { 
-          "type": "integer" 
+        "districtCode": {
+          "type": "integer"
         },
         "name": {
           "type": "string"
         },
         "higherHierarchy": {
           "type": "string"
+        },
+        "source": {
+          "type": "string"
         }
-      }
+      },
+      "additionalProperties": false,
+      "unique": ["districtCode", "source"]
     }
   }
 }

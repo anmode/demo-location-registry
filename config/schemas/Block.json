@@ -1,33 +1,34 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "type": "object",
-    "properties": {
-      "Block": {
-        "$ref": "#/definitions/Block"
-      }
-    },
-    "required": ["Block"],
-    "title": "Block",
-    "definitions": {
-      "Block": {
-        "$id": "#/properties/Block",
-        "type": "object",
-        "title": "The Block Schema",
-        "uniqueIndexFields": "BlockCode",
-        "required": ["name","BlockCode","higherHierarchy"],
-        "properties": {
-          "blockCode": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "string"
-          },
-         "higherHierarchy": {
-            "type": "string"
-         }
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "Block": {
+      "$ref": "#/definitions/Block"
+    }
+  },
+  "required": ["Block"],
+  "title": "Block",
+  "definitions": {
+    "Block": {
+      "type": "object",
+      "title": "The Block Schema",
+      "required": ["name", "blockCode", "higherHierarchy", "source"],
+      "properties": {
+        "blockCode": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "higherHierarchy": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
         }
-      }
+      },
+      "additionalProperties": false,
+      "unique": ["blockCode", "source"]
     }
   }
-  
-  
+}

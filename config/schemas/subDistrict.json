@@ -10,21 +10,25 @@
   "title": "SubDistrict",
   "definitions": {
     "SubDistrict": {
-      "$id": "#/properties/SubDistrict",
       "type": "object",
       "title": "The Subdistrict Schema",
-      "required": ["name", "subDistrictCode", "higherHierarchy"],
+      "required": ["name", "subDistrictCode", "higherHierarchy", "source"],
       "properties": {
-        "subDistrictCode": { 
-          "type": "integer" 
+        "subDistrictCode": {
+          "type": "integer"
         },
         "name": {
           "type": "string"
         },
         "higherHierarchy": {
           "type": "string"
+        },
+        "source": {
+          "type": "string"
         }
-      }
+      },
+      "additionalProperties": false,
+      "unique": ["subDistrictCode", "source"]
     }
   }
 }
