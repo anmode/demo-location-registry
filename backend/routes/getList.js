@@ -46,16 +46,20 @@ router.get('/:entityType', async (req, res) => {
     const entityType = req.params.entityType;
     const higherHierarchy = req.query.higherHierarchy;
     const higherHierarchyVal = req.query.higherHierarchyVal;
-    const hierarchySource = req.query.hierarchySource;
+    const hierarchySource = req.query.hierarchySource.toLowerCase();;
     const finalAns = [];
 
+
+    const higherHierarchyTitleCase = higherHierarchy.charAt(0).toUpperCase() + higherHierarchy.slice(1);
+    const entityTypeTitleCase = entityType.charAt(0).toUpperCase() + entityType.slice(1);
+
     const hierarchyPath = hierarchyConfig[hierarchySource]["hierarchy"].split(' > ');
-    const startIndex = hierarchyPath.findIndex(level => level.trim() === higherHierarchy);
-    const endIndex = hierarchyPath.findIndex(level => level.trim() === entityType);
+    const startIndex = hierarchyPath.findIndex(level => level.trim() === higherHierarchyTitleCase);
+    const endIndex = hierarchyPath.findIndex(level => level.trim() === entityTypeTitleCase);
 
     const entities = await fetchEntitiesRecursively(entityType, hierarchyPath, startIndex + 1, endIndex, higherHierarchyVal, hierarchySource, finalAns);
 
-    res.json({ entities });
+    res.json( entities );
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch list of entities' });
   }
@@ -84,7 +88,7 @@ async function fetchEntitiesRecursively(entityType, hierarchyPath, currentIndex,
     const entities = listResponse.data;
 
     if (currentIndex === endIndex) {
-      finalAns.push(entities);
+      finalAns.push(...entities);
     }
 
     currentIndex++;
