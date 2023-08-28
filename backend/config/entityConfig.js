@@ -57,8 +57,8 @@ const entityConfig = {
     "SubDistrict": {
         "lgd": {
             "keyMap": {
-                "subdistrictCode": "Subdistrict LGD Code",
-                "name": "Subdistrict Name (In English)",
+                "subDistrictCode": "Sub-District LGD Code",
+                "name": "Sub-District Name (In English)",
                 "higherHierarchy": "Hierarchy"
             }
         },

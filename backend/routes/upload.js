@@ -117,7 +117,7 @@ router.post('/', upload.single('file'), async (req, res) => {
         await axios.post(apiUrl, data);
         return { success: true };
       } catch (error) {
-        console.log(`Failed to process ${entityTypeTitleCase} with code ${data.districtCode}: ${error.message}`);
+        console.log(`Failed to process ${entityTypeTitleCase} with code ${data[entityTypeTitleCase]["code"]}: ${error.message}`);
         return { success: false, error: error.message };
       }
     });
