@@ -41,32 +41,43 @@ const router = express.Router();
  *               success: true
  *               results: []
  */
+
+
+// Parameter validation and extraction function
+const validateAndExtractParams = (req) => {
+  const entityType = req.query.entityType;
+  const source = req.query.source.toLowerCase();
+  const hierarchy = req.query.hierarchy;
+
+  if (!entityType) {
+    throw new Error('Invalid entityType');
+  }
+
+  if (!source) {
+    throw new Error('Invalid source');
+  }
+
+  if (!entityConfig[entityType] || !entityConfig[entityType][source]) {
+    throw new Error('Your source does not exist, add your source first');
+  }
+
+  return { entityType, source, hierarchy };
+};
+
 router.post('/', upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    // Extract query parameters
-    const entityType = req.query.entityType;
-    const source = req.query.source.toLowerCase();
-
-
-    // Validate the entityType and source
-    if (!entityType || !source) {
-      return res.status(400).json({ error: 'Invalid entityType or source' });
-    }
-
-    const hierarchy = req.query.hierarchy;
+    const { entityType, source, hierarchy } = validateAndExtractParams(req);
     const file = req.file;
+    const entityTypeTitleCase = entityType.charAt(0).toUpperCase() + entityType.slice(1);
 
     // Forward the entire file object to the /parse route for parsing
     const parseResponse = await axios.post('http://localhost:3000/api/parse', {
       file
     });
-
-    // Convert entityType to title case (e.g., 'district' -> 'District')
-    const entityTypeTitleCase = entityType.charAt(0).toUpperCase() + entityType.slice(1);
 
     // Get the configuration based on entity type and source
     const entityConfigForType = entityConfig[entityTypeTitleCase][source];
@@ -75,16 +86,18 @@ router.post('/', upload.single('file'), async (req, res) => {
     const processedData = parseResponse.data.map((item) => {
       const data = {};
 
-      // Error handling for missing or undefined entityConfigForType.keyMap
       if (!entityConfigForType.keyMap) {
-        console.error('entityConfigForType.keyMap is missing or undefined.');
-        return null; // Skip this item and move to the next iteration
+        const errorMessage = 'Entity keyMap is missing or undefined.';
+        console.error(errorMessage);
+        return { error: errorMessage };
       }
+
 
       for (const [key, value] of Object.entries(entityConfigForType.keyMap)) {
         if (!item[value]) {
-          console.error(`Value for ${value} is missing in the item.`);
-          continue; // Skip this key-value pair and move to the next iteration
+          const errorMessage = `Value for ${value} is missing in the item.`;
+          console.error(errorMessage);
+          return { error: errorMessage };
         }
         data[key] = item[value];
         data.source = source;
@@ -103,14 +116,13 @@ router.post('/', upload.single('file'), async (req, res) => {
       } else if (hierarchy) {
         data.higherHierarchy = hierarchy;
       }
-      
+
 
       console.log(data);
       return data;
     });
 
 
-    // Call the API for each processed data
     const apiUrl = `http://localhost:8081/api/v1/${entityTypeTitleCase}/invite`;
     const promises = processedData.map(async (data) => {
       try {
@@ -142,7 +154,10 @@ router.post('/', upload.single('file'), async (req, res) => {
       });
     }
   } catch (error) {
-    return res.status(400).json({ error: 'Error processing the file: ' + error.message });
+    console.error('Error:', error.message);
+
+    const errorMessage = error.message || 'Error processing the file';
+    return res.status(error.status || 500).json({ error: errorMessage });
   }
 });
 

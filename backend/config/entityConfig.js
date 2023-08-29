@@ -1,4 +1,4 @@
-const entityConfig = {
+module.exports = {
     "District": {
         "lgd": {
             "keyMap": {
@@ -30,13 +30,13 @@ const entityConfig = {
                 "higherHierarchy": "Higher_Hierarchy"
             }
         },
-        "anmolDIR": {
+        "anmol": {
             "keyMap": {
-                "stateCode": "Rajya Sankhya",
-                "name": "Rajya ka naam",
-                "higherHierarchy": "Heirarchy"
+                "stateCode": "Updated Code (Replace with actual code)",
+                "name": "Updated Name (In English)",
+                "higherHierarchy": "Updated Hierarchy"
             }
-        },
+        }
     },
     "Block": {
         "lgd": {
@@ -104,5 +104,3 @@ const entityConfig = {
     }
 };
 
-
-module.exports = entityConfig;
