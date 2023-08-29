@@ -2,12 +2,27 @@ const express = require('express');
 const axios = require('axios');
 const router = express.Router();
 const hierarchyConfig = require('../config/hierarchyConfig');
+const entityConfig = require('../config/entityConfig');
+
+const HTTP_STATUS = {
+  BAD_REQUEST: 400,
+  INTERNAL_SERVER_ERROR: 500,
+  SUCCESS: 200,
+};
+
+const ERROR_MESSAGES = {
+  MISSING_PARAMETERS: 'Missing parameters',
+  INVALID_HIERARCHY_SOURCE: 'Invalid hierarchy source',
+  INVALID_HIERARCHY_LEVELS: 'Invalid hierarchy levels',
+  FAILED_TO_FETCH: 'Failed to fetch list of entities',
+};
 
 /**
  * @swagger
  * /api/getList/{entityType}:
  *   get:
  *     summary: Get a list of entities based on hierarchy
+ *     tags: [Magic API]
  *     parameters:
  *       - in: path
  *         name: entityType
@@ -43,32 +58,47 @@ const hierarchyConfig = require('../config/hierarchyConfig');
  */
 router.get('/:entityType', async (req, res) => {
   try {
-    const entityType = req.params.entityType;
-    const higherHierarchy = req.query.higherHierarchy;
-    const higherHierarchyVal = req.query.higherHierarchyVal;
-    const hierarchySource = req.query.hierarchySource.toLowerCase();;
-    const finalAns = [];
-
-
-    const higherHierarchyTitleCase = higherHierarchy.charAt(0).toUpperCase() + higherHierarchy.slice(1);
+    const { entityType } = req.params;
+    const { higherHierarchy, higherHierarchyVal, hierarchySource } = req.query;
     const entityTypeTitleCase = entityType.charAt(0).toUpperCase() + entityType.slice(1);
 
-    const hierarchyPath = hierarchyConfig[hierarchySource]["hierarchy"].split(' > ');
-    const startIndex = hierarchyPath.findIndex(level => level.trim() === higherHierarchyTitleCase);
+    if (!entityTypeTitleCase || !higherHierarchy || !higherHierarchyVal || !hierarchySource) {
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({ error: ERROR_MESSAGES.MISSING_PARAMETERS });
+    }
+
+    const entityHierarchySource = entityConfig[entityTypeTitleCase]?.[hierarchySource];
+    if (!entityHierarchySource) {
+      return res.status(400).json({ error: 'Your source does not exist, add your source first' });
+    }
+
+    const hierarchySourceLower = hierarchySource.toLowerCase();
+    if (!hierarchyConfig[hierarchySourceLower]) {
+      return res.status(400).json({ error: 'There is no hierarchy for this source, please add your hierarchy of your source.' });
+    }
+
+    const hierarchyPath = hierarchyConfig[hierarchySourceLower]["hierarchy"].split(' > ');
+    const startIndex = hierarchyPath.findIndex(level => level.trim() === higherHierarchy.charAt(0).toUpperCase() + higherHierarchy.slice(1));
     const endIndex = hierarchyPath.findIndex(level => level.trim() === entityTypeTitleCase);
 
-    const entities = await fetchEntitiesRecursively(entityType, hierarchyPath, startIndex + 1, endIndex, higherHierarchyVal, hierarchySource, finalAns);
+    if (startIndex === -1 || endIndex === -1) {
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({ error: `${ERROR_MESSAGES.INVALID_HIERARCHY_LEVELS} and Level of this source are ${hierarchyConfig[hierarchySourceLower]["hierarchy"]}` });
+    }
 
-    res.json( entities );
+    const finalAns = await fetchEntitiesRecursively(entityTypeTitleCase, hierarchyPath, startIndex + 1, endIndex, higherHierarchyVal, hierarchySourceLower, []);
+    
+    res.json(finalAns);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch list of entities' });
+    console.error('Error:', error);
+    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: ERROR_MESSAGES.FAILED_TO_FETCH });
   }
 });
 
-async function fetchEntitiesRecursively(entityType, hierarchyPath, currentIndex, endIndex, higherHierarchyVal, hierarchySource, finalAns) {
+
+
+async function fetchEntitiesRecursively(entityTypeTitleCase, hierarchyPath, currentIndex, endIndex, higherHierarchyVal, hierarchySource, finalAns) {
   if (currentIndex <= endIndex) {
-    const hierarchyLevel = hierarchyPath[currentIndex].trim();
-    console.log(hierarchyLevel, higherHierarchyVal);
+    const hierarchyLevel = currentIndex === endIndex ? entityTypeTitleCase : hierarchyPath[currentIndex].trim();
+    console.log(hierarchyLevel);
     const listUrl = `http://localhost:8081/api/v1/${hierarchyLevel}/search`;
 
     const requestBody = {
@@ -94,11 +124,12 @@ async function fetchEntitiesRecursively(entityType, hierarchyPath, currentIndex,
     currentIndex++;
 
     for (const entity of entities) {
-      await fetchEntitiesRecursively(entityType, hierarchyPath, currentIndex, endIndex, entity.name, hierarchySource, finalAns);
+      await fetchEntitiesRecursively(entityTypeTitleCase, hierarchyPath, currentIndex, endIndex, entity.name, hierarchySource, finalAns);
     }
   }
 
   return finalAns;
 }
+
 
 module.exports = router;
