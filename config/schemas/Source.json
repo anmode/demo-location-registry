@@ -2,42 +2,28 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "type": "object",
     "properties": {
-      "District": {
-        "$ref": "#/definitions/EntityTypeConfig"
-      },
-      "State": {
-        "$ref": "#/definitions/EntityTypeConfig"
-      },
-      "Block": {
-        "$ref": "#/definitions/EntityTypeConfig"
-      },
-      "SubDistrict": {
-        "$ref": "#/definitions/EntityTypeConfig"
-      },
-      "Village": {
-        "$ref": "#/definitions/EntityTypeConfig"
-      },
-      "City": {
-        "$ref": "#/definitions/EntityTypeConfig"
+      "source": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/definitions/SourceConfig"
+        }
       }
     },
+    "required": ["source"],
+    "title": "Source Config",
     "definitions": {
-      "EntityTypeConfig": {
-        "type": "object",
-        "patternProperties": {
-          "^[a-zA-Z0-9]+$": {
-            "$ref": "#/definitions/SourceConfig"
-          }
-        }
-      },
       "SourceConfig": {
         "type": "object",
         "properties": {
+          "entity": {
+            "type": "string"
+          },
           "keyMap": {
             "$ref": "#/definitions/KeyMap"
           }
         },
-        "required": ["keyMap"]
+        "required": ["entity", "keyMap"],
+        "additionalProperties": false
       },
       "KeyMap": {
         "type": "object",
@@ -48,7 +34,6 @@
         },
         "required": ["districtCode", "name", "higherHierarchy"]
       }
-    },
-    "required": ["District", "State", "Block", "SubDistrict", "Village", "City"]
+    }
   }
   
