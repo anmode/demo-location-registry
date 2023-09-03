@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const entityConfig = require('../config/entityConfig');
-const fs = require('fs');
-const path = require('path'); 
+const axios = require('axios');
 
 /**
  * @swagger
  * /api/addSource:
- *   put:
+ *   post:
+ *     tags: [Source Related API]
  *     summary: Update source configuration
  *     description: Update the source configuration for a specific entity type and source
  *     parameters:
@@ -62,9 +61,8 @@ const path = require('path');
  *               message: The keyMap properties are not valid for the specified entityType. Make sure to include the correct code property.
  */
 
-
 // Update source in the configuration
-router.put('/', (req, res) => {
+router.post('/', async (req, res) => {
     const entityType = req.query.entityType;
     const source = req.query.source;
     const entityTypeTitleCase = entityType.charAt(0).toUpperCase() + entityType.slice(1);
@@ -77,38 +75,43 @@ router.put('/', (req, res) => {
     const newSourceConfig = req.body;
 
     try {
-        if (!entityConfig[entityTypeTitleCase]) {
-            return res.status(400).json({ error: 'Invalid entityType' });
-        }
-
-        // Validate keyMap properties based on the entityType
-        const expectedKey = `${entityTypeTitleCase.toLowerCase()}Code`;
-
         // Continue with the update
         const keyMap = {
-            [expectedKey]: newSourceConfig.keyMap.entityCode || '',
+            code: newSourceConfig.keyMap.entityCode || '',
             name: newSourceConfig.keyMap.name || '',
             higherHierarchy: newSourceConfig.keyMap.higherHierarchy || ''
         };
 
-        entityConfig[entityTypeTitleCase][source] = { keyMap };
 
-        // Convert entityConfig back to a string and write it to the configuration file
-        const updatedConfig = `module.exports = ${JSON.stringify(entityConfig, null, 4)};\n\n`;
-        const configFilePath = path.join(__dirname, '..', 'config', 'entityConfig.js'); // Adjust the path as needed
-        fs.writeFile(configFilePath, updatedConfig, 'utf8', (err) => {
-            if (err) {
-                return res.status(500).json({ error: 'Error updating configuration file' });
-            }
+        // Convert entityConfig to use the new structure and hierarchy
+        const updatedConfig = {
+            source: source,
+            entityFileMap: [
+                {
+                    entity: entityTypeTitleCase,
+                    keyMap: keyMap
+                }
+            ],
+            hierarchy: newSourceConfig.hierarchy || [] // Use the provided hierarchy or an empty array
+        };
+
+
+
+        console.log(updatedConfig);
+
+        // Send the updated source configuration to your API
+        const apiUrl = 'http://localhost:8081/api/v1/SourceConfig/invite';
+        try {
+            await axios.post(apiUrl, updatedConfig);
             return res.json({ message: 'Source updated successfully' });
-        });
-        
+        } catch (apiError) {
+            console.error(apiError);
+            return res.status(500).json({ error: 'Error updating source info via API' });
+        }
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: 'Error updating configuration' });
     }
 });
-
-
 
 module.exports = router;

@@ -7,10 +7,12 @@ const parseRoute = require('./routes/parse');
 const getListRoute = require('./routes/getList');
 const getInfoByName = require('./routes/getInfoByName');
 const getInfoByID = require('./routes/getInfoByLgdId');
-const addSource = require('./routes/addSource');
-const addHierarchy = require('./routes/hierarchy/add');
-const getAllHierarchies = require('./routes/hierarchy/fetch')
-const { add } = require('winston');
+const addSource = require('./routes/source/add');
+const addHierarchy = require('./routes/source/update/hierarchy/add');
+const getAllHierarchies = require('./routes/source/update/hierarchy/fetch');
+const getSourceData = require('./routes/source/fetchBySource');
+const getAllSourceData = require('./routes/source/fetchAllSourceData');
+const addEntityFileType = require('./routes/source/update/entityFileMap/add')
 
 const app = express();
 const PORT = 3000;
@@ -40,5 +42,7 @@ app.use('/api/getInfoByLgdId', getInfoByID);
 app.use('/api/addSource', addSource);
 app.use('/api/addHirarchy', addHierarchy);
 app.use('/api/getAllHierarchies', getAllHierarchies);
-
+app.use('/api/fetchDataBySource',getSourceData);
+app.use('/api/fetchAllSourceData',getAllSourceData);
+app.use('/api/addEntityFileType',addEntityFileType);
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

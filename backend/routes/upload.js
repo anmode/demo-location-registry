@@ -2,14 +2,13 @@ const express = require('express');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const axios = require('axios');
-const entityConfig = require('../config/entityConfig');
 const router = express.Router();
 
 /**
  * @swagger
  * /api/upload:
  *   post:
- *     summary: This api upload , parse and processed data store into database 
+ *     summary: Upload, parse, and process data and store it into the database
  *     consumes:
  *       - multipart/form-data
  *     parameters:
@@ -21,16 +20,16 @@ const router = express.Router();
  *         name: entityType
  *         type: string
  *         required: true
- *         description: The type of entity (State , District)
+ *         description: The type of entity (State, District)
  *       - in: query
  *         name: source
  *         type: string
  *         required: true
- *         description: The source of the data ( eg LGD)
+ *         description: The source of the data (e.g., LGD)
  *       - in: query
- *         name: hierarchy
+ *         name: higherHierarchy
  *         type: string
- *         description: Provide the Hierarchy If not in file ( Uttar Pradesh is hierarchy if you are uploading list of district of UP)
+ *         description: Provide the Value of Higher Hierarchy If not in the file (e.g., Uttar Pradesh is hierarchy if you are uploading a list of districts of UP)
  *     responses:
  *       200:
  *         description: Successful response
@@ -42,26 +41,16 @@ const router = express.Router();
  *               results: []
  */
 
-
 // Parameter validation and extraction function
 const validateAndExtractParams = (req) => {
   const entityType = req.query.entityType;
   const source = req.query.source.toLowerCase();
-  const hierarchy = req.query.hierarchy;
+  const higherHierarchy = req.query.higherHierarchy;
 
-  if (!entityType) {
-    throw new Error('Invalid entityType');
+  if (!entityType || !source) {
+    throw new Error('Invalid entityType or source');
   }
-
-  if (!source) {
-    throw new Error('Invalid source');
-  }
-
-  if (!entityConfig[entityType] || !entityConfig[entityType][source]) {
-    throw new Error('Your source does not exist, add your source first');
-  }
-
-  return { entityType, source, hierarchy };
+  return { entityType, source, higherHierarchy };
 };
 
 router.post('/', upload.single('file'), async (req, res) => {
@@ -70,88 +59,118 @@ router.post('/', upload.single('file'), async (req, res) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const { entityType, source, hierarchy } = validateAndExtractParams(req);
-    const file = req.file;
-    const entityTypeTitleCase = entityType.charAt(0).toUpperCase() + entityType.slice(1);
+    const { entityType, source, higherHierarchy } = validateAndExtractParams(req);
 
-    // Forward the entire file object to the /parse route for parsing
-    const parseResponse = await axios.post('http://localhost:3000/api/parse', {
-      file
-    });
+    try {
+      const response = await axios.get(`http://localhost:3000/api/fetchDataBySource?source=${source}`);
 
-    // Get the configuration based on entity type and source
-    const entityConfigForType = entityConfig[entityTypeTitleCase][source];
-
-    // Inside the processing loop where you prepare data
-    const processedData = parseResponse.data.map((item) => {
-      const data = {};
-
-      if (!entityConfigForType.keyMap) {
-        const errorMessage = 'Entity keyMap is missing or undefined.';
-        console.error(errorMessage);
-        return { error: errorMessage };
+      // Check if the response status code is 200 (OK)
+      if (response.status !== 200) {
+        console.error(`Error: Status code ${response.status}`);
+        return res.status(response.status).json({ error: 'Error fetching data from source' });
       }
 
+      const sourceInfo = response.data.data[0]; // Assuming you want the first item from the response data
+      const file = req.file;
+      const entityTypeTitleCase = entityType.charAt(0).toUpperCase() + entityType.slice(1);
 
-      for (const [key, value] of Object.entries(entityConfigForType.keyMap)) {
-        if (!item[value]) {
-          const errorMessage = `Value for ${value} is missing in the item.`;
+      // Forward the entire file object to the /parse route for parsing
+      const parseResponse = await axios.post('http://localhost:3000/api/parse', {
+        file
+      });
+
+      // console.log(sourceInfo);
+      // Inside the processing loop where you prepare data
+
+      // Inside the processing loop where you prepare data
+      const processedData = parseResponse.data.map((item) => {
+        const data = {};
+
+        const entityConfig = sourceInfo.entityFileMap.find((entityMap) =>
+          entityMap.entity.toLowerCase() === entityType.toLowerCase()
+        );
+
+        if (!entityConfig) {
+          const errorMessage = `No matching entity configuration found for ${entityType}`;
           console.error(errorMessage);
           return { error: errorMessage };
         }
-        data[key] = item[value];
-        data.source = source;
-      }
 
-      if (item.Hierarchy || item.heirarchy) {
-        const hierarchyHeader = item.Hierarchy || item.heirarchy;
-        const hierarchyRegex = /([^(/]+)/;
-        const match = hierarchyHeader.match(hierarchyRegex);
-        if (match) {
-          const extractedHierarchy = match[1].trim();
-          data.higherHierarchy = extractedHierarchy;
-        } else {
-          console.error('Failed to extract hierarchy from the header.');
+        const keyMap = entityConfig.keyMap;
+
+        if (!keyMap) {
+          const errorMessage = 'KeyMap is missing or undefined in entity configuration.';
+          console.error(errorMessage);
+          return { error: errorMessage };
         }
-      } else if (hierarchy) {
-        data.higherHierarchy = hierarchy;
-      }
 
+        for (const [key, value] of Object.entries(keyMap)) {
+          if (key === 'osid' || key === 'higherHierarchy') {
+            continue; // Skip "osid" and "higherHierarchy" fields
+          }
+          if (!item[value]) {
+            const errorMessage = `Value for ${value} is missing in the item.`;
+            console.error(errorMessage);
+            // return { error: errorMessage };
+          }
+          data[key] = item[value];
+        }
 
-      console.log(data);
-      return data;
-    });
+        if (item.Hierarchy) {
+          const hierarchyHeader = item.Hierarchy || item.hierarchy;
+          const hierarchyRegex = /([^(/]+)/;
+          const match = hierarchyHeader.match(hierarchyRegex);
+          if (match) {
+            const extractedHierarchy = match[1].trim();
+            data.higherHierarchy = extractedHierarchy;
+          } else {
+            console.error('Failed to extract hierarchy from the header.');
+          }
+        } else {
+          data.higherHierarchy = higherHierarchy;
+          // console.log("hello", higherHierarchy, data.higherHierarchy);
+        }
 
+        data.source = source;
 
-    const apiUrl = `http://localhost:8081/api/v1/${entityTypeTitleCase}/invite`;
-    const promises = processedData.map(async (data) => {
-      try {
-        await axios.post(apiUrl, data);
-        return { success: true };
-      } catch (error) {
-        console.log(`Failed to process ${entityTypeTitleCase} with code ${data[entityTypeTitleCase]["code"]}: ${error.message}`);
-        return { success: false, error: error.message };
-      }
-    });
-
-    // Wait for all the API calls to finish
-    const results = await Promise.all(promises);
-
-    // Check if any of the results contain an error
-    const hasErrors = results.some((result) => result.success === false);
-
-    if (hasErrors) {
-      return res.status(500).json({
-        message: 'File uploaded and parsed, but there were errors during data processing',
-        success: false,
-        results: results,
+        console.log(data); // Log final data with source
+        return data;
       });
-    } else {
-      return res.json({
-        message: 'File uploaded, parsed, and data processed successfully',
-        success: true,
-        results: results,
+
+
+      const apiUrl = `http://localhost:8081/api/v1/${entityTypeTitleCase}/invite`;
+      const promises = processedData.map(async (data) => {
+        try {
+          await axios.post(apiUrl, data);
+          return { success: true };
+        } catch (error) {
+          console.error(`${error.message}`);
+          return { success: false, error: error.message };
+        }
       });
+
+      // Wait for all the API calls to finish
+      const results = await Promise.all(promises);
+
+      // Check if any of the results contain an error
+      const hasErrors = results.some((result) => result.success === false);
+
+      if (hasErrors) {
+        return res.status(500).json({
+          message: 'File uploaded and parsed, but there were errors during data processing',
+          success: false,
+          results: results,
+        });
+      } else {
+        return res.json({
+          message: 'File uploaded, parsed, and data processed successfully',
+          success: true,
+          results: results,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Error making GET request' });
     }
   } catch (error) {
     console.error('Error:', error.message);

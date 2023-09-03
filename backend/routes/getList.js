@@ -1,8 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
-const hierarchyConfig = require('../config/hierarchyConfig');
-const entityConfig = require('../config/entityConfig');
+
 
 const HTTP_STATUS = {
   BAD_REQUEST: 400,
@@ -65,33 +64,44 @@ router.get('/:entityType', async (req, res) => {
     if (!entityTypeTitleCase || !higherHierarchy || !higherHierarchyVal || !hierarchySource) {
       return res.status(HTTP_STATUS.BAD_REQUEST).json({ error: ERROR_MESSAGES.MISSING_PARAMETERS });
     }
+    
+    const response = await axios.get(`http://localhost:3000/api/fetchDataBySource?source=${hierarchySource}`);
 
-    const entityHierarchySource = entityConfig[entityTypeTitleCase]?.[hierarchySource];
-    if (!entityHierarchySource) {
-      return res.status(400).json({ error: 'Your source does not exist, add your source first' });
+    // Check if the response status code is 200 (OK)
+    if (response.status !== 200) {
+      console.error(`Error: Status code ${response.status}`);
+      return res.status(response.status).json({ error: 'Error fetching data from source' });
+    }
+
+    const sourceInfo = response.data.data[0];
+    
+    if (!sourceInfo || !sourceInfo.hierarchy || !Array.isArray(sourceInfo.hierarchy) || sourceInfo.hierarchy.length === 0) {
+      return res.status(400).json({ error: 'Invalid or missing hierarchy information in source' });
     }
 
     const hierarchySourceLower = hierarchySource.toLowerCase();
-    if (!hierarchyConfig[hierarchySourceLower]) {
+    if (!sourceInfo.hierarchy) {
       return res.status(400).json({ error: 'There is no hierarchy for this source, please add your hierarchy of your source.' });
     }
 
-    const hierarchyPath = hierarchyConfig[hierarchySourceLower]["hierarchy"].split(' > ');
+    const hierarchyPath = sourceInfo.hierarchy[0].split(' > ');
+
     const startIndex = hierarchyPath.findIndex(level => level.trim() === higherHierarchy.charAt(0).toUpperCase() + higherHierarchy.slice(1));
     const endIndex = hierarchyPath.findIndex(level => level.trim() === entityTypeTitleCase);
 
     if (startIndex === -1 || endIndex === -1) {
-      return res.status(HTTP_STATUS.BAD_REQUEST).json({ error: `${ERROR_MESSAGES.INVALID_HIERARCHY_LEVELS} and Level of this source are ${hierarchyConfig[hierarchySourceLower]["hierarchy"]}` });
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({ error: `${ERROR_MESSAGES.INVALID_HIERARCHY_LEVELS} and Level of this source are ${sourceInfo.hierarchy}` });
     }
 
     const finalAns = await fetchEntitiesRecursively(entityTypeTitleCase, hierarchyPath, startIndex + 1, endIndex, higherHierarchyVal, hierarchySourceLower, []);
     
-    res.json(finalAns);
+    res.json({[`The result is based on this hirarchy`]: hierarchyPath , entities: finalAns });
   } catch (error) {
     console.error('Error:', error);
     res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: ERROR_MESSAGES.FAILED_TO_FETCH });
   }
 });
+
 
 
 
