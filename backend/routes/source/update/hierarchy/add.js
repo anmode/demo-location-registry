@@ -7,7 +7,8 @@ const axios = require('axios');
  * /api/addHierarchy:
  *   post:
  *     summary: Add hierarchy configuration
- *     tags: [Hierarchy Related API]
+ *     tags:
+ *       - Source Config
  *     description: Add a new hierarchy configuration for a specific source
  *     parameters:
  *       - in: query
@@ -30,22 +31,22 @@ const axios = require('axios');
  *                   items:
  *                     type: string
  *               example:
- *                 hierarchy: ["State", "District", "Subdistrict", "Town / City / Village"]
+ *                 hierarchy: ["Union > State > District > SubDistrict > Town / City / Village"]
  *     responses:
- *       200:
+ *       '200':
  *         description: Hierarchy configuration added successfully
  *         content:
  *           application/json:
  *             example:
  *               message: Hierarchy configuration added successfully
- *       400:
+ *       '400':
  *         description: Invalid source or hierarchy configuration
  *         content:
  *           application/json:
  *             example:
  *               error: Invalid request
  *               message: Invalid source or hierarchy configuration
- *       500:
+ *       '500':
  *         description: Error updating hierarchy configuration
  *         content:
  *           application/json:
@@ -53,6 +54,10 @@ const axios = require('axios');
  *               error: Error updating hierarchy configuration
  *               message: There was an error while updating the hierarchy configuration.
  */
+
+
+
+
 
 router.post('/', async (req, res) => {
     const source = req.query.source;

@@ -6,7 +6,7 @@ const axios = require('axios');
  * @swagger
  * /api/fetchDataBySource:
  *   get:
- *     tags: [Source Related API]
+ *     tags: [Basic]
  *     summary: Fetch data based on source
  *     description: Retrieve all data associated with a specific source.
  *     parameters:

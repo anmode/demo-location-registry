@@ -7,6 +7,7 @@ const router = express.Router();
  * /api/getInfoByLgdId/{entityType}:
  *   get:
  *     summary: Get Info about entity ( state , district , sub District etc) by LGD Code
+ *     tags: [Basic]
  *     parameters:
  *       - in: path
  *         name: entityType

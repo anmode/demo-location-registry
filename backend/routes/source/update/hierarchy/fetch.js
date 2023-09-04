@@ -6,7 +6,7 @@ const router = express.Router();
  * @swagger
  * /api/getAllHierarchiesBySource:
  *   get:
- *     tags: [Hierarchy Related API]
+ *     tags: [Basic]
  *     summary: Get all hierarchies of a particular source
  *     description: Retrieve all hierarchy entries associated with a specific source.
  *     parameters:

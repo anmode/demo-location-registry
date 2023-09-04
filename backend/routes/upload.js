@@ -9,6 +9,7 @@ const router = express.Router();
  * /api/upload:
  *   post:
  *     summary: Upload, parse, and process data and store it into the database
+ *     tags: [Main]
  *     consumes:
  *       - multipart/form-data
  *     parameters:

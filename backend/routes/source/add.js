@@ -6,7 +6,7 @@ const axios = require('axios');
  * @swagger
  * /api/addSource:
  *   post:
- *     tags: [Source Related API]
+ *     tags: [Source Config]
  *     summary: Update source configuration
  *     description: Update the source configuration for a specific entity type and source
  *     parameters:

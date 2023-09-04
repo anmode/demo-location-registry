@@ -11,7 +11,7 @@ const upload = multer({ dest: 'uploads/' }); // Define the upload directory
  * /api/parse:
  *   post:
  *     summary: This is parser API to parse any type of file.
- *     tags: [Basic API]
+ *     tags: [Utility]
  *     consumes:
  *       - multipart/form-data
  *     parameters:

@@ -7,6 +7,7 @@ const router = express.Router();
  * /api/getInfoByName/{entityType}:
  *   get:
  *     summary: Get Info about entity ( State , District , SubDistrict etc) by name
+ *     tags: [Basic]
  *     parameters:
  *       - in: path
  *         name: entityType

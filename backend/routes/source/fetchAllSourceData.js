@@ -6,7 +6,7 @@ const axios = require('axios');
  * @swagger
  * /api/fetchAllSourceData:
  *   get:
- *     tags: [Source Related API]
+ *     tags: [Basic]
  *     summary: Fetch all data based on source
  *     description: Retrieve all data associated with all available sources.
  *     responses:
@@ -34,7 +34,6 @@ const axios = require('axios');
  *                     higherHierarchy: "Hierarchy2"
  *                   }
  *                 },
- *                 // Add more data objects for other sources as needed
  *               ]
  *       400:
  *         description: Error fetching data or no data available

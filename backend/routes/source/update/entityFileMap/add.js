@@ -7,7 +7,7 @@ const axios = require('axios');
  * /api/addEntityFileType/{entity}:
  *   post:
  *     summary: Add entityFileType configuration
- *     tags: [FileType Related API]
+ *     tags: [Source Config]
  *     description: Add a new entityFileType configuration for a specific source
  *     parameters:
  *       - in: path

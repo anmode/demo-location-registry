@@ -21,7 +21,7 @@ const ERROR_MESSAGES = {
  * /api/getList/{entityType}:
  *   get:
  *     summary: Get a list of entities based on hierarchy
- *     tags: [Magic API]
+ *     tags: [Main]
  *     parameters:
  *       - in: path
  *         name: entityType
