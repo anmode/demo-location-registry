@@ -13,6 +13,9 @@ const getAllHierarchies = require('./routes/source/update/hierarchy/fetch');
 const getSourceData = require('./routes/source/fetchBySource');
 const getAllSourceData = require('./routes/source/fetchAllSourceData');
 const addEntityFileType = require('./routes/source/update/entityFileMap/add')
+const fetchHierarchy = require('./routes/source/update/hierarchy/fetch');
+const fetchEntityFileMap = require('./routes/source/update/entityFileMap/fetch');
+const fetchAllEntityFileMap =  require('./routes/source/update/entityFileMap/fetchAll');
 
 const app = express();
 const PORT = 3000;
@@ -45,4 +48,7 @@ app.use('/api/getAllHierarchies', getAllHierarchies);
 app.use('/api/fetchDataBySource',getSourceData);
 app.use('/api/fetchAllSourceData',getAllSourceData);
 app.use('/api/addEntityFileType',addEntityFileType);
+app.use('/api/fetchHierarchy',fetchHierarchy);
+app.use('/api/fetchEntityFileMap',fetchEntityFileMap);
+app.use('/api/fetchAllEntityFileMap',fetchAllEntityFileMap);
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

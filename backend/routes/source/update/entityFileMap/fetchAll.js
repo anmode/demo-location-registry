@@ -4,25 +4,35 @@ const axios = require('axios');
 
 /**
  * @swagger
- * /api/getHierarchies:
+ * /api/getAllEntityFileTypes:
  *   get:
- *     summary: Get hierarchies for a specific source
+ *     summary: Get all entityFileType configurations for a specific source
  *     tags: [Basic]
- *     description: Get the hierarchies configured for a specific source
+ *     description: Get all entityFileType configurations for a specific source
  *     parameters:
  *       - in: query
  *         name: source
  *         required: true
- *         description: The source for which to retrieve hierarchies
+ *         description: The source for which to retrieve all entityFileType configurations
  *         schema:
  *           type: string
  *     responses:
  *       '200':
- *         description: Hierarchies retrieved successfully
+ *         description: EntityFileType configurations retrieved successfully
  *         content:
  *           application/json:
  *             example:
- *               hierarchies: ["Union > State > District", "Union > State > District > Subdistrict"]
+ *               entityFileTypes: 
+ *                 - entity: "District Data"
+ *                   keyMap:
+ *                     entityCode: "DISTRICT"
+ *                     name: "District Name"
+ *                     higherHierarchy: "State"
+ *                 - entity: "City Data"
+ *                   keyMap:
+ *                     entityCode: "CITY"
+ *                     name: "City Name"
+ *                     higherHierarchy: "District"
  *       '400':
  *         description: Invalid source
  *         content:
@@ -31,12 +41,12 @@ const axios = require('axios');
  *               error: Invalid request
  *               message: Invalid source
  *       '500':
- *         description: Error fetching hierarchies
+ *         description: Error fetching entityFileType configurations
  *         content:
  *           application/json:
  *             example:
- *               error: Error fetching hierarchies
- *               message: There was an error while fetching hierarchies.
+ *               error: Error fetching entityFileType configurations
+ *               message: There was an error while fetching entityFileType configurations.
  */
 
 router.get('/', async (req, res) => {
@@ -66,13 +76,13 @@ router.get('/', async (req, res) => {
 
         const sourceData = response.data[0];
 
-        // Retrieve hierarchies from the source configuration
-        const hierarchies = sourceData.hierarchy || [];
+        // Retrieve all entityFileType configurations for the specified source
+        const entityFileTypes = sourceData.entityFileMap;
 
-        return res.status(200).json({ hierarchies });
+        return res.status(200).json({ entityFileTypes });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: 'Error fetching hierarchies' });
+        return res.status(500).json({ error: 'Error fetching entityFileType configurations' });
     }
 });
 
