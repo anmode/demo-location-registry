@@ -83,60 +83,66 @@ router.post('/', upload.single('file'), async (req, res) => {
       // console.log(sourceInfo);
       // Inside the processing loop where you prepare data
 
-      // Inside the processing loop where you prepare data
-      const processedData = parseResponse.data.map((item) => {
-        const data = {};
+  // Inside the processing loop where you prepare data
+const processedData = parseResponse.data.map((item) => {
+  const data = {};
 
-        const entityConfig = sourceInfo.entityFileMap.find((entityMap) =>
-          entityMap.entity.toLowerCase() === entityType.toLowerCase()
-        );
+  const entityConfig = sourceInfo.entityFileMap.find((entityMap) =>
+    entityMap.entity.toLowerCase() === entityType.toLowerCase()
+  );
 
-        if (!entityConfig) {
-          const errorMessage = `No matching entity configuration found for ${entityType}`;
-          console.error(errorMessage);
-          return { error: errorMessage };
-        }
+  if (!entityConfig) {
+    const errorMessage = `No matching entity configuration found for ${entityType}`;
+    console.error(errorMessage);
+    return { error: errorMessage };
+  }
 
-        const keyMap = entityConfig.keyMap;
+  const keyMap = entityConfig.keyMap;
 
-        if (!keyMap) {
-          const errorMessage = 'KeyMap is missing or undefined in entity configuration.';
-          console.error(errorMessage);
-          return { error: errorMessage };
-        }
+  if (!keyMap) {
+    const errorMessage = 'KeyMap is missing or undefined in entity configuration.';
+    console.error(errorMessage);
+    return { error: errorMessage };
+  }
 
-        for (const [key, value] of Object.entries(keyMap)) {
-          if (key === 'osid' || key === 'higherHierarchy') {
-            continue; // Skip "osid" and "higherHierarchy" fields
-          }
-          if (!item[value]) {
-            const errorMessage = `Value for ${value} is missing in the item.`;
-            console.error(errorMessage);
-            // return { error: errorMessage };
-          }
-          data[key] = item[value];
-        }
+  for (const [key, value] of Object.entries(keyMap)) {
+    if (key === 'osid' || key === 'higherHierarchy') {
+      continue; // Skip "osid" and "higherHierarchy" fields
+    }
+    if (!item[value]) {
+      const errorMessage = `Value for ${value} is missing in the item.`;
+      console.error(errorMessage);
+      // return { error: errorMessage };
+    }
+    if (key === 'code') {
+      data[`${entityType.toLowerCase()}Code`] = item[value];
+      continue;
+    }
+    
+    data[key] = item[value];
+  }
 
-        if (item.Hierarchy) {
-          const hierarchyHeader = item.Hierarchy || item.hierarchy;
-          const hierarchyRegex = /([^(/]+)/;
-          const match = hierarchyHeader.match(hierarchyRegex);
-          if (match) {
-            const extractedHierarchy = match[1].trim();
-            data.higherHierarchy = extractedHierarchy;
-          } else {
-            console.error('Failed to extract hierarchy from the header.');
-          }
-        } else {
-          data.higherHierarchy = higherHierarchy;
-          // console.log("hello", higherHierarchy, data.higherHierarchy);
-        }
+  if (item.Hierarchy) {
+    const hierarchyHeader = item.Hierarchy || item.hierarchy;
+    const hierarchyRegex = /([^(/]+)/;
+    const match = hierarchyHeader.match(hierarchyRegex);
+    if (match) {
+      const extractedHierarchy = match[1].trim();
+      data.higherHierarchy = extractedHierarchy;
+    } else {
+      console.error('Failed to extract hierarchy from the header.');
+    }
+  } else {
+    data.higherHierarchy = higherHierarchy;
+    // console.log("hello", higherHierarchy, data.higherHierarchy);
+  }
 
-        data.source = source;
+  data.source = source;
 
-        console.log(data); // Log final data with source
-        return data;
-      });
+  console.log(data); // Log final data with source
+  return data;
+});
+
 
 
       const apiUrl = `http://localhost:8081/api/v1/${entityTypeTitleCase}/invite`;

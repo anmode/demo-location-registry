@@ -23,15 +23,13 @@ const axios = require('axios');
  *         description: Hierarchy configuration to be added
  *         content:
  *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 hierarchy:
- *                   type: array
- *                   items:
- *                     type: string
- *               example:
- *                 hierarchy: ["Union > State > District > SubDistrict > Town / City / Village"]
+ *         schema:
+ *           type: object
+ *           properties:
+ *              hierarchy:
+ *                type: string
+ *         example:
+ *           hierarchy: "Union > State > District > SubDistrict > Town / City / Village"
  *     responses:
  *       '200':
  *         description: Hierarchy configuration added successfully
@@ -59,10 +57,13 @@ const axios = require('axios');
 
 
 
+
+
 router.post('/', async (req, res) => {
     const source = req.query.source;
     const newHierarchy = req.body.hierarchy;
 
+    console.log(source,newHierarchy);
     // Check if source and hierarchy are provided
     if (!source || !newHierarchy || newHierarchy.length === 0) {
         return res.status(400).json({ error: 'Invalid source or hierarchy' });
