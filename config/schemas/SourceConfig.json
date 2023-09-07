@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "SourceConfig": {
+      "$ref": "#/definitions/SourceConfig"
+    }
+  },
+  "required": ["SourceConfig"],
+  "title": "SourceConfig",
+  "definitions": {
+    "SourceConfig": {
+      "type": "object",
+      "uniqueIndexFields": ["source"],
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "entityFileMap": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EntityFileMap"
+          }
+        },
+        "hierarchy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["source", "entityFileMap"]
+    },
+    "EntityFileMap": {
+      "type": "object",
+      "properties": {
+        "entity": {
+          "type": "string"
+        },
+        "keyMap": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "higherHierarchy": {
+              "type": "string"
+            }
+          },
+          "required": ["code", "name", "higherHierarchy"]
+        }
+      },
+      "required": []
+    }
+  }
+}
