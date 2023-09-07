@@ -83,7 +83,7 @@ router.get('/:entity', async (req, res) => {
 
         // Find the entityFileType configuration for the specified entity
         const entityFileType = sourceData.entityFileMap.find((item) => item.entity === entityTypeTitleCase);
-        console.log(entityFileType);
+        // console.log(entityFileType);
 
         if (!entityFileType) {
             return res.status(400).json({ error: 'Entity not found' });
