@@ -44,7 +44,7 @@ const router = express.Router();
 
 // Parameter validation and extraction function
 const validateAndExtractParams = (req) => {
-  const entityType = req.query.entityType;
+  const entityType = req.query.entityType.toLowerCase();
   const source = req.query.source.toLowerCase();
   const higherHierarchy = req.query.higherHierarchy;
 
@@ -114,8 +114,9 @@ const processedData = parseResponse.data.map((item) => {
       console.error(errorMessage);
       // return { error: errorMessage };
     }
-    if (key === 'code') {
-      data[`${entityType.toLowerCase()}Code`] = item[value];
+    if (key === 'code' ) {
+      const entityCodeKey = entityType === 'subdistrict' ? 'subDistrictCode' : `${entityType.toLowerCase()}Code`;
+      data[entityCodeKey] = item[value];
       continue;
     }
     
@@ -145,7 +146,7 @@ const processedData = parseResponse.data.map((item) => {
 
 
 
-      const apiUrl = `http://localhost:8081/api/v1/${entityTypeTitleCase}/invite`;
+     const apiUrl = `http://localhost:8081/api/v1/${entityType === 'subdistrict' ? 'SubDistrict' : entityTypeTitleCase}/invite`;
       const promises = processedData.map(async (data) => {
         try {
           await axios.post(apiUrl, data);

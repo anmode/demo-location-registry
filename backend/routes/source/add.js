@@ -7,7 +7,7 @@ const axios = require('axios');
  * /api/addSource:
  *   post:
  *     tags: [Source Config]
- *     summary: Update source configuration
+ *     summary: add source configuration
  *     description: Update the source configuration for a specific entity type and source
  *     parameters:
  *       - in: query
@@ -22,29 +22,35 @@ const axios = require('axios');
  *         description: The source of the data (e.g., lgd, otherSource)
  *         schema:
  *           type: string
+ *       - in: query
+ *         name: hierarchy
+ *         required: false
+ *         description: The hierarchy string in the format "Union > State > District > SubDistrict > Block / City / Village"
+ *         schema:
+ *           type: string
  *       - in: body
  *         name: body
  *         required: true
  *         description: Add your source config to our database
  *         content:
  *           application/json:
- *         schema:
- *           type: object
- *           properties:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 keyMap:
+ *                   type: object
+ *                   properties:
+ *                     entityCode:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     higherHierarchy:
+ *                       type: string
+ *             example:
  *               keyMap:
- *                 type: object
- *                 properties:
- *                   enitityCode:
- *                     type: string
- *                   name:
- *                     type: string
- *                   higherHierarchy:
- *                     type: string
- *           example:
- *             keyMap:
- *               entityCode: Updated Code (Replace with actual code)
- *               name: Updated Name (In English)
- *               higherHierarchy: Updated Hierarchy
+ *                 entityCode: Updated Code (Replace with actual code)
+ *                 name: Updated Name (In English)
+ *                 higherHierarchy: Updated Hierarchy
  *     responses:
  *       200:
  *         description: Source configuration updated successfully
@@ -65,6 +71,7 @@ const axios = require('axios');
 router.post('/', async (req, res) => {
     const entityType = req.query.entityType;
     const source = req.query.source;
+    const hierarchy = req.query.hierarchy ? [req.query.hierarchy] : [];
     const entityTypeTitleCase = entityType.charAt(0).toUpperCase() + entityType.slice(1);
 
     // Check if entityType and source are provided
@@ -82,7 +89,6 @@ router.post('/', async (req, res) => {
             higherHierarchy: newSourceConfig.keyMap.higherHierarchy || ''
         };
 
-
         // Convert entityConfig to use the new structure and hierarchy
         const updatedConfig = {
             source: source,
@@ -92,12 +98,10 @@ router.post('/', async (req, res) => {
                     keyMap: keyMap
                 }
             ],
-            hierarchy: newSourceConfig.hierarchy || [] // Use the provided hierarchy or an empty array
+            hierarchy: hierarchy
         };
 
-
-
-        console.log(updatedConfig);
+        console.log(updatedConfig, keyMap);
 
         // Send the updated source configuration to your API
         const apiUrl = 'http://localhost:8081/api/v1/SourceConfig/invite';

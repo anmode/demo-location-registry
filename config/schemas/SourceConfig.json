@@ -29,7 +29,7 @@
           }
         }
       },
-      "required": ["source", "entityFileMap", "hierarchy"]
+      "required": ["source", "entityFileMap"]
     },
     "EntityFileMap": {
       "type": "object",
