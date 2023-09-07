@@ -4,7 +4,7 @@ const axios = require('axios');
 
 /**
  * @swagger
- * /api/getAllEntityFileTypes:
+ * /api/getAllEntityFileMap:
  *   get:
  *     summary: Get all entityFileType configurations for a specific source
  *     tags: [Basic]

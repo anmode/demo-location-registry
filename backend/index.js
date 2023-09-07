@@ -43,12 +43,14 @@ app.use('/api/getList', getListRoute);
 app.use('/api/getInfoByName', getInfoByName);
 app.use('/api/getInfoByLgdId', getInfoByID);
 app.use('/api/addSource', addSource);
-app.use('/api/addHirarchy', addHierarchy);
+app.use('/api/addHierarchy', addHierarchy);
 app.use('/api/getAllHierarchies', getAllHierarchies);
 app.use('/api/fetchDataBySource',getSourceData);
 app.use('/api/fetchAllSourceData',getAllSourceData);
 app.use('/api/addEntityFileType',addEntityFileType);
-app.use('/api/fetchHierarchy',fetchHierarchy);
-app.use('/api/fetchEntityFileMap',fetchEntityFileMap);
-app.use('/api/fetchAllEntityFileMap',fetchAllEntityFileMap);
+app.use('/api/getHierarchy',fetchHierarchy);
+app.use('/api/getEntityFileMap',fetchEntityFileMap);
+app.use('/api/getAllEntityFileMap',fetchAllEntityFileMap);
+
+
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

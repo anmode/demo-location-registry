@@ -4,7 +4,7 @@ const axios = require('axios');
 
 /**
  * @swagger
- * /api/getEntityFileType/{entity}:
+ * /api/getEntityFileMap/{entity}:
  *   get:
  *     summary: Get entityFileType configuration for a specific source and entity
  *     tags: [Basic]
@@ -52,7 +52,9 @@ const axios = require('axios');
 
 router.get('/:entity', async (req, res) => {
     const source = req.query.source;
-    const entity = req.params.entity;
+    const entity = req.params.entity.toLowerCase();
+
+    const entityTypeTitleCase = entity.charAt(0).toUpperCase() + entity.slice(1);
 
     // Check if source and entity are provided
     if (!source || !entity) {
@@ -77,15 +79,17 @@ router.get('/:entity', async (req, res) => {
         }
 
         const sourceData = response.data[0];
+        console.log(sourceData);
 
         // Find the entityFileType configuration for the specified entity
-        const entityFileType = sourceData.entityFileMap.find((item) => item.entity === entity);
+        const entityFileType = sourceData.entityFileMap.find((item) => item.entity === entityTypeTitleCase);
+        console.log(entityFileType);
 
         if (!entityFileType) {
             return res.status(400).json({ error: 'Entity not found' });
         }
 
-        return res.status(200).json({ entityFileType });
+        return res.status(200).json(entityFileType);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Error fetching entityFileType configuration' });

@@ -4,7 +4,7 @@ const axios = require('axios');
 
 /**
  * @swagger
- * /api/getHierarchies:
+ * /api/getHierarchy:
  *   get:
  *     summary: Get hierarchies for a specific source
  *     tags: [Basic]
@@ -65,6 +65,7 @@ router.get('/', async (req, res) => {
         }
 
         const sourceData = response.data[0];
+        console.log(sourceData);
 
         // Retrieve hierarchies from the source configuration
         const hierarchies = sourceData.hierarchy || [];
