@@ -36,7 +36,7 @@ services:
   registry:
     image: dockerhub/sunbird-rc-core:${RELEASE_VERSION}
     volumes:
-      - /Users/anmode/Desktop/c4gt/location-registry/config/schemas:/home/sunbirdrc/config/public/_schemas
+      - ./config/schemas:/home/sunbirdrc/config/public/_schemas
     environment:
       - connectionInfo_uri=jdbc:postgresql://db:5432/registry
       - connectionInfo_username=postgres
