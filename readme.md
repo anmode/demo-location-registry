@@ -1,8 +1,10 @@
 # Project Documentation: Locations Master Database
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/your/project-name/CI%20Pipeline)
-![GitHub issues](https://img.shields.io/github/issues/your/project-name)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/your/project-name)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/anmode/demo-location-registry/CI%20Pipeline)
+![GitHub issues](https://img.shields.io/github/issues/anmode/demo-location-registry)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/anmode/demo-location-registry)
+![GitHub](https://img.shields.io/github/license/anmode/demo-location-registry)
+![GitHub last commit](https://img.shields.io/github/last-commit/anmode/demo-location-registry)
 
 ## Introduction
 
